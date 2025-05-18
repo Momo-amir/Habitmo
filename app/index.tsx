@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect } from "react";
 import CategoryScreen from "./pages/categoryScreen";
+import FormScreen from "./pages/formScreen";
 import HabitDetailScreen from "./pages/habitDetailScreen";
 import HomeScreen from "./pages/homeScreen";
 
@@ -38,6 +39,7 @@ export default function Index() {
 		<Stack.Navigator>
 			<Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
 			<Stack.Screen name="HabitDetail" component={HabitDetailScreen} />
+			<Stack.Screen name="Form" component={FormScreen} options={{ presentation: "modal" }} />
 		</Stack.Navigator>
 	);
 }

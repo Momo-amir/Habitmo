@@ -3,7 +3,7 @@ import { ImageSourcePropType } from "react-native";
 export interface Category {
 	id: string; // Unique identifier
 	name: string; // "Health", "Productivity", etc.
-	icon?: ImageSourcePropType; // Optional image or icon (like emoji or asset)
+	icon?: ImageSourcePropType | any; // Optional image or icon (like emoji or asset)
 	color?: string; // Optional background or accent color
 	isFavorite?: boolean; // For front-page display
 }
@@ -23,6 +23,7 @@ export type RootStackParamList = {
 	Home: undefined;
 	Categories: undefined;
 	HabitDetail: { categoryId: string };
+	Form: { mode: "add" | "edit"; initialData?: Category; onSubmit?: () => void | Promise<void>; type: "category" | "habit"; categoryId?: string };
 };
 
 export type Frequency =

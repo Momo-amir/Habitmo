@@ -29,8 +29,25 @@ export const getHabitsByCategory = (categoryId: string): Habit[] => {
 	}
 };
 
-export const addHabit = (habit: Habit): void => {
+// Check if a habit exists by id
+export const habitExistsById = (id: string): boolean => {
+	const existing = db.getFirstSync("SELECT id FROM habits WHERE id = ?", [id]);
+	return !!existing;
+};
+
+// Check if a habit exists by name within the same category
+export const habitExistsByNameInCategory = (name: string, categoryId: string): boolean => {
+	const existing = db.getFirstSync("SELECT id FROM habits WHERE name = ? AND categoryId = ?", [name, categoryId]);
+	return !!existing;
+};
+
+// Add habit only if id and name+category are unique
+export const addHabit = async (habit: Habit): Promise<boolean> => {
+	if (habitExistsById(habit.id) || habitExistsByNameInCategory(habit.name, habit.categoryId)) {
+		return false;
+	}
 	db.runSync(`INSERT INTO habits (id, name, categoryId, frequency, completedDates, isFavorite, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)`, [habit.id, habit.name, habit.categoryId, JSON.stringify(habit.frequency), JSON.stringify(habit.completedDates || []), habit.isFavorite ? 1 : 0, habit.createdAt]);
+	return true;
 };
 
 export const updateHabit = (habit: Habit): void => {

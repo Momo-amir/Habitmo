@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
 import { Button, ScrollView, Text, View } from "react-native";
@@ -11,14 +11,24 @@ const fallbackImage = require("@/assets/images/a.png");
 export default function CategoryScreen() {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+	const isFocused = useIsFocused();
 
-	useEffect(() => {
+	const refetchCategories = () => {
 		const data = getAllCategories();
 		setCategories(data);
-	}, []);
+	};
+
+	useEffect(() => {
+		if (isFocused) {
+			refetchCategories();
+		}
+	}, [isFocused]);
 
 	const handleAddCategory = () => {
-		console.log("Add category pressed");
+		navigation.navigate("Form", {
+			mode: "add",
+			type: "category",
+		});
 	};
 
 	const handleCategoryPress = (categoryId: string) => {

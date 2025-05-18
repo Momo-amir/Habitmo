@@ -1,17 +1,21 @@
+import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { Button, ScrollView, Text } from "react-native";
 import { Habit } from "../../models/types";
+import { getHabitsByCategory } from "../../services/habitService";
 import HabitItem from "../components/habit";
 
 export default function HabitDetailScreen({ route, navigation }: any) {
 	const { categoryId } = route.params;
 	const [habits, setHabits] = useState<Habit[]>([]);
+	const isFocused = useIsFocused();
 
 	useEffect(() => {
-		// Replace with DB call later
-		// Fetch habits for the category here
-		setHabits([]);
-	}, [categoryId]);
+		if (isFocused) {
+			const data = getHabitsByCategory(categoryId);
+			setHabits(data);
+		}
+	}, [isFocused, categoryId]);
 
 	const handleToggleComplete = (id: string) => {
 		// Placeholder toggle logic
@@ -29,8 +33,11 @@ export default function HabitDetailScreen({ route, navigation }: any) {
 	};
 
 	const handleAddHabit = () => {
-		// TODO: Replace with real form
-		console.log("Add new habit for category", categoryId);
+		navigation.navigate("Form", {
+			mode: "add",
+			type: "habit",
+			categoryId,
+		});
 	};
 
 	return (
