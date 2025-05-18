@@ -1,6 +1,10 @@
+import type { RootStackParamList } from "@/models/types";
 import { Habit } from "@/models/types";
-import { completeHabit } from "@/services/habitService";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { completeHabit, deleteHabit, updateHabit } from "@/services/habitService";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 
 interface HabitItemProps {
 	habit: Habit;
@@ -136,21 +140,71 @@ export default function HabitItem({ habit, onToggleComplete, onPress }: HabitIte
 	const lastCompleted = getLastCompletedDate(habit);
 	const statusColor = getStatusColor(habit);
 	const nextDue = getNextDueDate(habit);
+	type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Form">;
+	const navigation = useNavigation<NavigationProp>();
 
 	const handleComplete = async () => {
 		await completeHabit(habit.id);
 		onToggleComplete();
 	};
 
+	const handleFavoriteToggle = async () => {
+		const updatedHabit = { ...habit, isFavorite: !habit.isFavorite };
+		await updateHabit(updatedHabit);
+		onToggleComplete();
+	};
+
+	const handleDelete = async () => {
+		await deleteHabit(habit.id);
+		onToggleComplete();
+	};
+
+	const handleEdit = () => {
+		navigation.navigate("Form", {
+			mode: "edit",
+			type: "habit",
+			categoryId: habit.categoryId,
+			initialData: habit,
+		});
+	};
+
+	const renderRightActions = () => (
+		<View style={styles.actionsContainer}>
+			<Pressable onPress={handleEdit} style={[styles.actionButton, { backgroundColor: "#2196f3" }]}>
+				<Text style={styles.actionText}>Rediger</Text>
+			</Pressable>
+			<Pressable onPress={handleDelete} style={[styles.actionButton, { backgroundColor: "#f44336" }]}>
+				<Text style={styles.actionText}>Slet</Text>
+			</Pressable>
+		</View>
+	);
+
+	const renderLeftActions = () => (
+		<View style={styles.actionsContainer}>
+			<Pressable onPress={handleFavoriteToggle} style={[styles.actionButton, { backgroundColor: "#ff9800" }]}>
+				<Text style={styles.actionText}>{habit.isFavorite ? "Fjern\nfavorit" : "Tilføj\nfavorit"}</Text>
+			</Pressable>
+		</View>
+	);
+
 	return (
-		<TouchableOpacity onPress={handleComplete} style={[styles.container, { borderLeftColor: statusColor }]}>
-			<View style={{ flex: 1 }}>
-				<Text style={styles.name}>{habit.name}</Text>
-				{lastCompleted ? <Text style={styles.subtext}>Senest: {timeSince(lastCompleted)} siden</Text> : <Text style={styles.subtext}>Aldrig gennemført</Text>}
-				{nextDue && <Text style={styles.subtext}>Næste: {timeUntil(nextDue)}</Text>}
-			</View>
-			<View style={[styles.statusDot, { backgroundColor: statusColor }]} />
-		</TouchableOpacity>
+		<Swipeable renderLeftActions={renderLeftActions} renderRightActions={renderRightActions}>
+			<TouchableOpacity onPress={handleComplete} style={[styles.container, { borderLeftColor: statusColor }]}>
+				<View style={{ flex: 1 }}>
+					<Text style={styles.name}>
+						{habit.name} {habit.isFavorite ? "⭐" : ""}
+					</Text>
+					<Text style={styles.subtext}>
+						{habit.frequency.type === "daily" && "Dagligt"}
+						{habit.frequency.type === "weekly" && `Ugentligt (${habit.frequency.days.map((d) => "SMTWTFS"[d]).join(", ")})`}
+						{habit.frequency.type === "custom" && `Hver ${habit.frequency.interval} dag(e)`}
+					</Text>
+					{lastCompleted ? <Text style={styles.subtext}>Senest: {timeSince(lastCompleted)} siden</Text> : <Text style={styles.subtext}>Aldrig gennemført</Text>}
+					{nextDue && <Text style={styles.subtext}>Næste: {timeUntil(nextDue)}</Text>}
+				</View>
+				<View style={[styles.statusDot, { backgroundColor: statusColor }]} />
+			</TouchableOpacity>
+		</Swipeable>
 	);
 }
 
@@ -178,5 +232,19 @@ const styles = StyleSheet.create({
 		height: 16,
 		borderRadius: 8,
 		marginLeft: 12,
+	},
+	actionsContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	actionButton: {
+		justifyContent: "center",
+		alignItems: "center",
+		width: 80,
+		height: "100%",
+	},
+	actionText: {
+		color: "#fff",
+		fontWeight: "600",
 	},
 });

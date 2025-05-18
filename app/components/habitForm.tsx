@@ -16,9 +16,10 @@ const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
 export default function HabitForm({ initialData, mode, onSubmit, categoryId }: HabitFormProps) {
 	const [name, setName] = useState(initialData?.name ?? "");
 	const [isFavorite, setIsFavorite] = useState(initialData?.isFavorite ?? false);
-	const [frequencyType, setFrequencyType] = useState<Frequency["type"]>(initialData?.frequency.type ?? "daily");
-	const [weeklyDays, setWeeklyDays] = useState<number[]>(initialData?.frequency.type === "weekly" ? initialData.frequency.days : []);
-	const [customInterval, setCustomInterval] = useState(initialData?.frequency.type === "custom" ? String(initialData.frequency.interval) : "3");
+	const initialFrequency = initialData?.frequency ?? { type: "daily" };
+	const [frequencyType, setFrequencyType] = useState<Frequency["type"]>(initialFrequency.type);
+	const [weeklyDays, setWeeklyDays] = useState<number[]>(initialFrequency.type === "weekly" ? initialFrequency.days : []);
+	const [customInterval, setCustomInterval] = useState(initialFrequency.type === "custom" ? String(initialFrequency.interval) : "3");
 
 	const toggleDay = (dayIndex: number) => {
 		setWeeklyDays((prev) => (prev.includes(dayIndex) ? prev.filter((d) => d !== dayIndex) : [...prev, dayIndex]));

@@ -8,6 +8,7 @@ export const getAllHabits = (): Habit[] => {
 			...item,
 			isFavorite: !!item.isFavorite,
 			completedDates: JSON.parse(item.completedDates || "[]"),
+			frequency: JSON.parse(item.frequency),
 		}));
 	} catch (error) {
 		console.error("Failed to fetch habits:", error);
@@ -22,6 +23,7 @@ export const getHabitsByCategory = (categoryId: string): Habit[] => {
 			...item,
 			isFavorite: !!item.isFavorite,
 			completedDates: JSON.parse(item.completedDates || "[]"),
+			frequency: JSON.parse(item.frequency),
 		}));
 	} catch (error) {
 		console.error("Failed to fetch habits by category:", error);
@@ -90,10 +92,3 @@ export const completeHabit = (id: string): void => {
 		throw error;
 	}
 };
-
-export function logCompletedDates() {
-	const rows = db.getAllSync("SELECT id, completedDates FROM habits") as { id: any; completedDates: any }[];
-	rows.forEach(({ id, completedDates }) => {
-		console.log(`Habit ID: ${id}, completedDates: ${completedDates}`);
-	});
-}

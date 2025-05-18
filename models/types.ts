@@ -23,7 +23,7 @@ export type RootStackParamList = {
 	Home: undefined;
 	Categories: undefined;
 	HabitDetail: { categoryId: string };
-	Form: { mode: "add" | "edit"; initialData?: Category; onSubmit?: () => void | Promise<void>; type: "category" | "habit"; categoryId?: string };
+	Form: { mode: "add" | "edit"; initialData?: Category | Habit; onSubmit?: () => void | Promise<void>; type: "category" | "habit"; categoryId?: string };
 };
 
 export type Frequency =
