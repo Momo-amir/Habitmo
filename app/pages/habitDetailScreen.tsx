@@ -1,8 +1,8 @@
 import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button, ScrollView, Text } from "react-native";
 import { Habit } from "../../models/types";
-import { getHabitsByCategory } from "../../services/habitService";
+import { getHabitsByCategory, completeHabit } from "../../services/habitService";
 import HabitItem from "../components/habit";
 
 export default function HabitDetailScreen({ route, navigation }: any) {
@@ -10,26 +10,20 @@ export default function HabitDetailScreen({ route, navigation }: any) {
 	const [habits, setHabits] = useState<Habit[]>([]);
 	const isFocused = useIsFocused();
 
+	const fetchHabits = useCallback(() => {
+		const data = getHabitsByCategory(categoryId);
+		setHabits(data);
+	}, [categoryId]);
+
 	useEffect(() => {
 		if (isFocused) {
-			const data = getHabitsByCategory(categoryId);
-			setHabits(data);
+			fetchHabits();
 		}
-	}, [isFocused, categoryId]);
+	}, [isFocused, fetchHabits]);
 
-	const handleToggleComplete = (id: string) => {
-		// Placeholder toggle logic
-		const today = new Date().toISOString().split("T")[0];
-		setHabits((prev) =>
-			prev.map((h) =>
-				h.id === id
-					? {
-							...h,
-							completedDates: h.completedDates.includes(today) ? h.completedDates.filter((d) => d !== today) : [...h.completedDates, today],
-					  }
-					: h
-			)
-		);
+	const handleToggleComplete = async (id: string) => {
+		await completeHabit(id);
+		fetchHabits();
 	};
 
 	const handleAddHabit = () => {

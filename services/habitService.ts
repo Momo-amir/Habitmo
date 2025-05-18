@@ -67,3 +67,33 @@ export const deleteHabit = (id: string): void => {
 		throw error;
 	}
 };
+
+// Mark a habit as completed for today by appending today's date with time to completedDates and persisting it
+// habitService.ts
+export const completeHabit = (id: string): void => {
+	try {
+		const habit = db.getFirstSync("SELECT * FROM habits WHERE id = ?", [id]) as Habit;
+		if (!habit) throw new Error("Habit not found");
+
+		const completedDates: string[] = Array.isArray(habit.completedDates) ? habit.completedDates : JSON.parse(habit.completedDates || "[]");
+
+		const now = new Date().toISOString();
+		console.log("Adding completion timestamp:", now);
+
+		if (!completedDates.some((date) => date.startsWith(now.split("T")[0]))) {
+			completedDates.push(now);
+		}
+
+		db.runSync(`UPDATE habits SET completedDates = ? WHERE id = ?`, [JSON.stringify(completedDates), id]);
+	} catch (error) {
+		console.error("Failed to complete habit:", error);
+		throw error;
+	}
+};
+
+export function logCompletedDates() {
+	const rows = db.getAllSync("SELECT id, completedDates FROM habits") as { id: any; completedDates: any }[];
+	rows.forEach(({ id, completedDates }) => {
+		console.log(`Habit ID: ${id}, completedDates: ${completedDates}`);
+	});
+}
