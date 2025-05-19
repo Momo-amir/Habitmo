@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 20,
 		fontWeight: "600",
+		marginBottom: 14,
 	},
 	subtitle: {
 		marginTop: 8,
@@ -111,10 +112,12 @@ const styles = StyleSheet.create({
 	},
 	row: {
 		flexDirection: "row",
-		justifyContent: "space-around",
+		justifyContent: "center",
+		gap: 10,
 	},
 	freqOption: {
-		padding: 8,
+		paddingVertical: 8,
+		paddingHorizontal: 12,
 		borderWidth: 1,
 		borderColor: "#ccc",
 		borderRadius: 6,
@@ -127,8 +130,9 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 4,
 		marginHorizontal: 2,
+		borderColor: "#ccc",
 	},
 	selectedDay: {
-		backgroundColor: "#aaa",
+		backgroundColor: "#7CEA9C",
 	},
 });
