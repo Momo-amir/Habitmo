@@ -44,7 +44,7 @@ export default function FormScreen() {
 				<View style={styles.modal}>
 					<View style={styles.header}>
 						<Pressable onPress={() => navigation.goBack()}>
-							<Text style={styles.closeText}>Luk</Text>
+							<Text style={styles.closeText}>Close</Text>
 						</Pressable>
 					</View>
 					{type === "category" && <CategoryForm mode={mode} initialData={initialData as Category} onSubmit={handleSubmit} />}

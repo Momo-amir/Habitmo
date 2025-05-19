@@ -5,7 +5,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 export default function RootLayout() {
 	return (
 		<GestureHandlerRootView style={styles.container}>
-			<Stack />
+			<Stack screenOptions={{ headerShown: false }} />
 		</GestureHandlerRootView>
 	);
 }
@@ -13,5 +13,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: "#ffffff",
 	},
 });

@@ -27,7 +27,7 @@ export const initializeDatabase = () => {
 			`INSERT INTO categories (id, name, icon, color, isFavorite) VALUES 
        (?, ?, ?, ?, ?),
        (?, ?, ?, ?, ?)`,
-			["1", "Health", "a.png", "#E57373", 1, "2", "Productivity", "a.png", "#64B5F6", 0]
+			["1", "Health", "#E57373", "#E57373", 1, "2", "Productivity", "a.png", "#64B5F6", 0]
 		);
 	}
 };

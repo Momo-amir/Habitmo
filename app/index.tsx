@@ -20,7 +20,7 @@ function TabNavigator() {
 					let iconName = route.name === "Home" ? "home" : "grid";
 					return <Ionicons name={iconName as "home" | "grid"} size={size} color={color} />;
 				},
-				tabBarActiveTintColor: "#121212",
+				tabBarActiveTintColor: "#003300",
 				tabBarInactiveTintColor: "gray",
 				headerShown: false,
 			})}>

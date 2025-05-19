@@ -1,19 +1,18 @@
-import { ImageBackground, ImageSourcePropType, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-interface cardProps {
-	img: ImageSourcePropType; // Use `any` or `ImageSourcePropType` for stricter typing
+interface CardProps {
+	backgroundColor: string;
 	size: "small" | "medium" | "large";
-
 	onPress: () => void;
 	text: string;
 }
 
-export default function Card({ img, size, onPress, text }: cardProps) {
+export default function Card({ backgroundColor, size, onPress, text }: CardProps) {
 	return (
-		<TouchableOpacity style={[styles.card, styles[size]]} onPress={onPress}>
-			<ImageBackground source={img} style={styles.cardBackground} imageStyle={styles.cardImage} resizeMode="cover">
+		<TouchableOpacity style={[styles.card, styles[size], { backgroundColor }]} onPress={onPress}>
+			<View style={styles.content}>
 				<Text style={styles.cardText}>{text}</Text>
-			</ImageBackground>
+			</View>
 		</TouchableOpacity>
 	);
 }
@@ -21,33 +20,30 @@ export default function Card({ img, size, onPress, text }: cardProps) {
 const styles = StyleSheet.create({
 	card: {
 		borderRadius: 10,
-		margin: 10,
+		margin: 0,
 		overflow: "hidden",
-		backgroundColor: "#000000",
 	},
-	cardBackground: {
+	content: {
 		width: "100%",
 		height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
-		opacity: 0.8,
-	},
-	cardImage: {
-		borderRadius: 10,
 	},
 	cardText: {
-		fontSize: 16,
-		color: "#fff",
+		fontSize: 18,
+		color: "#fefefe",
 		textAlign: "center",
 		padding: 5,
 		borderRadius: 5,
+		fontWeight: 500,
 	},
 	large: {
 		width: 350,
 		height: 150,
+		margin: 10,
 	},
 	medium: {
-		width: 100,
+		width: 160,
 		height: 100,
 	},
 	small: {

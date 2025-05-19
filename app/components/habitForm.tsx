@@ -52,13 +52,13 @@ export default function HabitForm({ initialData, mode, onSubmit, categoryId }: H
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>{mode === "add" ? "Ny vane" : "Rediger vane"}</Text>
-			<TextInput style={styles.input} placeholder="Navn" value={name} onChangeText={setName} />
+			<Text style={styles.title}>{mode === "add" ? "New habit" : "Edit habit"}</Text>
+			<TextInput style={styles.input} placeholder="Name" value={name} onChangeText={setName} />
 			<View style={styles.switchRow}>
-				<Text>Favorit</Text>
+				<Text>Favorite</Text>
 				<Switch value={isFavorite} onValueChange={setIsFavorite} />
 			</View>
-			<Text style={styles.subtitle}>Gentag</Text>
+			<Text style={styles.subtitle}>Repeat</Text>
 			<View style={styles.row}>
 				{["daily", "weekly", "custom"].map((type) => (
 					<Pressable key={type} style={[styles.freqOption, frequencyType === type && styles.selected]} onPress={() => setFrequencyType(type as Frequency["type"])}>
@@ -77,9 +77,9 @@ export default function HabitForm({ initialData, mode, onSubmit, categoryId }: H
 				</View>
 			)}
 
-			{frequencyType === "custom" && <TextInput style={styles.input} value={customInterval} onChangeText={setCustomInterval} keyboardType="numeric" placeholder="Hver N dage" />}
+			{frequencyType === "custom" && <TextInput style={styles.input} value={customInterval} onChangeText={setCustomInterval} keyboardType="numeric" placeholder="Custom interval" />}
 
-			<Button title={mode === "add" ? "Tilføj" : "Opdater"} onPress={handleSubmit} />
+			<Button title={mode === "add" ? "Add" : "Update"} onPress={handleSubmit} />
 		</View>
 	);
 }

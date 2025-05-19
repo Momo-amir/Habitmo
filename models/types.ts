@@ -1,9 +1,9 @@
 import { ImageSourcePropType } from "react-native";
 
 export interface Category {
-	id: string; // Unique identifier
-	name: string; // "Health", "Productivity", etc.
-	icon?: ImageSourcePropType | any; // Optional image or icon (like emoji or asset)
+	id: string;
+	name: string;
+	icon?: ImageSourcePropType | any; //TODO: Optional image or icon (like emoji or asset)
 	color?: string; // Optional background or accent color
 	isFavorite?: boolean; // For front-page display
 }
@@ -14,7 +14,7 @@ export interface Habit {
 	name: string;
 	categoryId: string; // Reference to Category.id
 	frequency: Frequency;
-	completedDates: string[]; // e.g. ["2025-05-14", "2025-05-15"]
+	completedDates: string[];
 	isFavorite?: boolean;
 	createdAt: string;
 }

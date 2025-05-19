@@ -37,9 +37,13 @@ export default function CategoryScreen() {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ padding: 10 }}>
-			<Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10, marginLeft: 10 }}>Category</Text>
-			<View style={{ flexDirection: "column", justifyContent: "center", marginTop: 16, alignItems: "center" }}>
+		<ScrollView contentContainerStyle={{ paddingTop: 38, paddingHorizontal: 10, paddingBottom: 28, backgroundColor: "#ffffff" }}>
+			<View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", marginTop: 28 }}>
+				<Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10, marginLeft: 10, color: "#003300" }}>Category</Text>
+				<Button title="Add New" onPress={handleAddCategory} />
+			</View>
+
+			<View style={{ flexDirection: "column", justifyContent: "center", marginTop: 16, alignItems: "center", backgroundColor: "#fff" }}>
 				{categories.map((category) => (
 					<Swipeable
 						key={category.id}
@@ -66,10 +70,10 @@ export default function CategoryScreen() {
 						renderRightActions={() => (
 							<View style={{ flexDirection: "row" }}>
 								<TouchableOpacity style={{ backgroundColor: "#007AFF", justifyContent: "center", alignItems: "center", width: 80, height: 150, alignSelf: "center" }} onPress={() => navigation.navigate("Form", { mode: "edit", type: "category", initialData: category })}>
-									<Text style={{ color: "#fff", fontWeight: "bold" }}>Edit</Text>
+									<Text style={{ color: "#fefefe", fontWeight: "bold" }}>Edit</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
-									style={{ backgroundColor: "#FF3B30", justifyContent: "center", alignItems: "center", width: 80, height: 150, alignSelf: "center", borderEndEndRadius: 10, borderStartEndRadius: 10 }}
+									style={{ backgroundColor: "#DC143C", justifyContent: "center", alignItems: "center", width: 80, height: 150, alignSelf: "center", borderEndEndRadius: 10, borderStartEndRadius: 10 }}
 									onPress={() => {
 										deleteCategory(category.id);
 										refetchCategories();
@@ -78,11 +82,10 @@ export default function CategoryScreen() {
 								</TouchableOpacity>
 							</View>
 						)}>
-						<Card text={category.name} img={category.icon || fallbackImage} size="large" onPress={() => handleCategoryPress(category.id)} />
+						<Card text={category.name} backgroundColor={category.icon || fallbackImage} size="large" onPress={() => handleCategoryPress(category.id)} />
 					</Swipeable>
 				))}
 			</View>
-			<Button title="Add Category" onPress={handleAddCategory} />
 		</ScrollView>
 	);
 }

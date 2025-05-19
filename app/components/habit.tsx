@@ -71,7 +71,7 @@ function getStatusColor(habit: Habit): string {
 		return "#4caf50";
 	} else if (daysSince === intervalDays) {
 		// Due today
-		return "#ffeb3b";
+		return "#FEC901";
 	} else if (daysSince > intervalDays) {
 		// Overdue
 		return "#f44336";
@@ -88,23 +88,23 @@ function timeSince(date: Date): string {
 
 	// If same local day, return "I dag"
 	if (isSameLocalDay(now, date)) {
-		return "I dag";
+		return "Today";
 	}
 
 	const seconds = Math.floor(diffMs / 1000);
 	const units: [string, number][] = [
-		["år", 31536000],
-		["mdr", 2592000],
-		["uger", 604800],
-		["dage", 86400],
-		["timer", 3600],
+		["year", 31536000],
+		["months", 2592000],
+		["weeks", 604800],
+		["days", 86400],
+		["hours", 3600],
 		["min", 60],
 	];
 	for (const [label, secs] of units) {
 		const val = Math.floor(seconds / secs);
 		if (val >= 1) return `${val} ${label}`;
 	}
-	return "lige nu";
+	return "Right now";
 }
 
 // Utility: time until next due (similar logic)
@@ -118,22 +118,22 @@ function timeUntil(date: Date): string {
 
 	const diffDays = (nextDueMidnight - todayMidnight) / (24 * 60 * 60 * 1000);
 
-	if (diffDays <= 0) return "forfalden";
+	if (diffDays <= 0) return "Now";
 
 	const seconds = Math.floor(diffMs / 1000);
 	const units: [string, number][] = [
-		["år", 31536000],
-		["mdr", 2592000],
-		["uger", 604800],
-		["dage", 86400],
-		["timer", 3600],
+		["yr", 31536000],
+		["month", 2592000],
+		["weeks", 604800],
+		["days", 86400],
+		["hours", 3600],
 		["min", 60],
 	];
 	for (const [label, secs] of units) {
 		const val = Math.floor(seconds / secs);
-		if (val >= 1) return `om ${val} ${label}`;
+		if (val >= 1) return `in ${val} ${label}`;
 	}
-	return "snart";
+	return "Soon";
 }
 
 export default function HabitItem({ habit, onToggleComplete, onPress }: HabitItemProps) {
@@ -171,10 +171,10 @@ export default function HabitItem({ habit, onToggleComplete, onPress }: HabitIte
 	const renderRightActions = () => (
 		<View style={styles.actionsContainer}>
 			<Pressable onPress={handleEdit} style={[styles.actionButton, { backgroundColor: "#2196f3" }]}>
-				<Text style={styles.actionText}>Rediger</Text>
+				<Text style={styles.actionText}>Edit</Text>
 			</Pressable>
-			<Pressable onPress={handleDelete} style={[styles.actionButton, { backgroundColor: "#f44336" }]}>
-				<Text style={styles.actionText}>Slet</Text>
+			<Pressable onPress={handleDelete} style={[styles.actionButton, { backgroundColor: "#DC143C" }]}>
+				<Text style={styles.actionText}>Delete</Text>
 			</Pressable>
 		</View>
 	);
@@ -182,7 +182,7 @@ export default function HabitItem({ habit, onToggleComplete, onPress }: HabitIte
 	const renderLeftActions = () => (
 		<View style={styles.actionsContainer}>
 			<Pressable onPress={handleFavoriteToggle} style={[styles.actionButton, { backgroundColor: "#ff9800" }]}>
-				<Text style={styles.actionText}>{habit.isFavorite ? "Fjern\nfavorit" : "Tilføj\nfavorit"}</Text>
+				<Text style={styles.actionText}>{habit.isFavorite ? "Remove\nfavorite" : "Add\nfavorite"}</Text>
 			</Pressable>
 		</View>
 	);
@@ -195,12 +195,12 @@ export default function HabitItem({ habit, onToggleComplete, onPress }: HabitIte
 						{habit.name} {habit.isFavorite ? "⭐" : ""}
 					</Text>
 					<Text style={styles.subtext}>
-						{habit.frequency.type === "daily" && "Dagligt"}
-						{habit.frequency.type === "weekly" && `Ugentligt (${habit.frequency.days.map((d) => "SMTWTFS"[d]).join(", ")})`}
-						{habit.frequency.type === "custom" && `Hver ${habit.frequency.interval} dag(e)`}
+						{habit.frequency.type === "daily" && "Daily"}
+						{habit.frequency.type === "weekly" && `Weekly (${habit.frequency.days.map((d) => "SMTWTFS"[d]).join(", ")})`}
+						{habit.frequency.type === "custom" && `Every ${habit.frequency.interval} day(s)`}
 					</Text>
-					{lastCompleted ? <Text style={styles.subtext}>Senest: {timeSince(lastCompleted)} siden</Text> : <Text style={styles.subtext}>Aldrig gennemført</Text>}
-					{nextDue && <Text style={styles.subtext}>Næste: {timeUntil(nextDue)}</Text>}
+					{lastCompleted ? <Text style={styles.subtext}>Latest completion: {timeSince(lastCompleted)} </Text> : <Text style={styles.subtext}>Never Completed</Text>}
+					{nextDue && <Text style={styles.subtext}>Next: {timeUntil(nextDue)}</Text>}
 				</View>
 				<View style={[styles.statusDot, { backgroundColor: statusColor }]} />
 			</TouchableOpacity>

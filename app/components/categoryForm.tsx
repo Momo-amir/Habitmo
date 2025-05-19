@@ -13,7 +13,7 @@ interface CategoryFormProps {
 
 export default function CategoryForm({ initialData, mode, onSubmit }: CategoryFormProps) {
 	const [name, setName] = useState(initialData?.name ?? "");
-	const [icon, setIcon] = useState(initialData?.icon ?? "a.png");
+	const [icon, setIcon] = useState(initialData?.icon ?? "");
 	const [color, setColor] = useState(initialData?.color ?? "#000000");
 	const [isFavorite, setIsFavorite] = useState(initialData?.isFavorite ?? false);
 
@@ -38,7 +38,7 @@ export default function CategoryForm({ initialData, mode, onSubmit }: CategoryFo
 			if (success) {
 				await onSubmit(category);
 			} else {
-				Alert.alert("Kategori eksisterer", "En kategori med dette navn eller ID findes allerede.");
+				Alert.alert("Category Exists", "A category with this name or ID already exists.");
 			}
 		}
 	};
@@ -46,11 +46,10 @@ export default function CategoryForm({ initialData, mode, onSubmit }: CategoryFo
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>{mode === "add" ? "New Category" : "Edit Category"}</Text>
-			<TextInput style={styles.input} placeholder="Navn" value={name} onChangeText={setName} />
-			<TextInput style={styles.input} placeholder="Billede (filnavn eller emoji)" value={icon as string} onChangeText={setIcon} />
-			<TextInput style={styles.input} placeholder="Colorcode (#000000)" value={color} onChangeText={setColor} />
+			<TextInput style={styles.input} placeholder="Category Name" value={name} onChangeText={setName} />
+			<TextInput style={styles.input} placeholder="Color in Hex (Yes it is stupid)" value={icon as string} onChangeText={setIcon} />
 			<View style={styles.switchContainer}>
-				<Text>Favorit</Text>
+				<Text style={{ fontSize: 16, fontWeight: 500 }}>Add Favorite</Text>
 				<Switch value={isFavorite} onValueChange={setIsFavorite} />
 			</View>
 			<Button title={mode === "add" ? "Add" : "Update"} onPress={handleSubmit} />

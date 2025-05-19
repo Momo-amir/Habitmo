@@ -7,7 +7,7 @@ export const getAllCategories = (): Category[] => {
 		return rows.map((item: any) => ({
 			...item,
 			isFavorite: !!item.isFavorite,
-			icon: item.icon ? `@/assets/images/${item.icon}` : "@/assets/images/a.png",
+			icon: `${item.icon}`,
 		}));
 	} catch (error) {
 		console.error("Failed to fetch categories:", error);
