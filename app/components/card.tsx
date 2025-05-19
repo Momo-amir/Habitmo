@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 		margin: 10,
 	},
 	medium: {
-		width: 160,
+		width: 165,
 		height: 100,
 	},
 	small: {
