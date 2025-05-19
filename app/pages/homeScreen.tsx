@@ -1,7 +1,7 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Category, Habit, RootStackParamList } from "../../models/types";
 import { getAllCategories } from "../../services/categoryService";
@@ -16,19 +16,45 @@ export default function Home() {
 
 	const isFocused = useIsFocused();
 
+	// Animation values
+	const titleOpacity = useRef(new Animated.Value(0)).current;
+	const titleTranslateY = useRef(new Animated.Value(20)).current;
+
+	const refetchData = () => {
+		const allHabits = getAllHabits();
+		setFavoriteHabits(allHabits.filter((habit) => habit.isFavorite));
+
+		const allCategories = getAllCategories();
+		const favCats = allCategories.filter((cat) => cat.isFavorite).slice(0, 4);
+		setFavoriteCategories(favCats);
+	};
+
 	useEffect(() => {
 		if (isFocused) {
-			const allHabits = getAllHabits();
-			setFavoriteHabits(allHabits.filter((habit) => habit.isFavorite));
+			refetchData();
 
-			const allCategories = getAllCategories();
-			const favCats = allCategories.filter((cat) => cat.isFavorite).slice(0, 4);
-			setFavoriteCategories(favCats);
+			// Trigger animation
+			Animated.parallel([
+				Animated.timing(titleOpacity, {
+					toValue: 1,
+					duration: 400,
+					useNativeDriver: true,
+				}),
+				Animated.timing(titleTranslateY, {
+					toValue: 0,
+					duration: 500,
+					useNativeDriver: true,
+				}),
+			]).start();
 		}
 	}, [isFocused]);
 
 	const handleCategoryPress = (categoryId: string) => {
 		navigation.navigate("HabitDetail", { categoryId });
+	};
+
+	const handleToggleComplete = (habitId: string) => {
+		refetchData(); // Refetch data when a habit is clicked
 	};
 
 	return (
@@ -37,7 +63,16 @@ export default function Home() {
 				{/* Favorite Categories */}
 				{favoriteCategories.length > 0 && (
 					<View style={styles.favoriteContainer}>
-						<Text style={styles.title}>Favorited Categories</Text>
+						<Animated.Text
+							style={[
+								styles.title,
+								{
+									opacity: titleOpacity,
+									transform: [{ translateY: titleTranslateY }],
+								},
+							]}>
+							Favorited Categories
+						</Animated.Text>
 						<View style={styles.categoryGrid}>
 							{favoriteCategories.map((category) => (
 								<View key={category.id} style={styles.categoryCardWrapper}>
@@ -52,9 +87,18 @@ export default function Home() {
 				{favoriteHabits.length > 0 && (
 					<ScrollView style={{ backgroundColor: "#fff" }}>
 						<View style={styles.favoriteContainer}>
-							<Text style={styles.subTitle}>Favorited Habits</Text>
+							<Animated.Text
+								style={[
+									styles.subTitle,
+									{
+										opacity: titleOpacity,
+										transform: [{ translateY: titleTranslateY }],
+									},
+								]}>
+								Favorited Habits
+							</Animated.Text>
 							{favoriteHabits.map((habit) => (
-								<HabitItem key={habit.id} habit={habit} onToggleComplete={() => {}} onPress={() => {}} />
+								<HabitItem key={habit.id} habit={habit} onToggleComplete={() => handleToggleComplete(habit.id)} onPress={() => {}} />
 							))}
 						</View>
 					</ScrollView>
